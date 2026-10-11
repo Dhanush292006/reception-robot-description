@@ -41,7 +41,7 @@ Install ROS 2 Jazzy first and source its setup file. Then install the ROS and Ga
     sudo apt install ros-jazzy-xacro ros-jazzy-robot-state-publisher \
       ros-jazzy-joint-state-publisher-gui ros-jazzy-rviz2 \
       ros-jazzy-ros-gz ros-jazzy-teleop-twist-keyboard \
-      ros-jazzy-urdf
+      ros-jazzy-urdf python3-tk
 
 ros-jazzy-ros-gz supplies the ROS/Gazebo bridge and Gazebo Sim integration for the Jazzy/Harmonic pairing. Do not install or load Gazebo Classic plugins for this package.
 
@@ -158,6 +158,20 @@ If the router changes the ESP32 address, update robot_ip or configure a DHCP res
     ros2 run teleop_twist_keyboard teleop_twist_keyboard
 
 The bridge listens on /cmd_vel. Confirm the teleop messages with ros2 topic echo /cmd_vel. Test first with the robot supported so its wheels are clear of the ground. If a wheel spins opposite to the expected direction, change that motor's invert flag in the Arduino sketch, upload again, and retest at low speed.
+
+### Python GUI teleop with RViz
+
+Install `python3-tk` (included in the apt command above), build the workspace, then start the RViz display and GUI:
+
+    ros2 launch reception_robot_description rviz_teleop.launch.py
+
+The GUI publishes `geometry_msgs/msg/Twist` to `/cmd_vel`. Hold the directional buttons or use W/A/S/D for forward, strafe left/right, and backward; Q/E turn left/right. The sliders set linear and angular speed, and the STOP button or Space key publishes zero velocity. Release a movement button/key to stop that direction.
+
+For the physical robot, run `hardware.launch.py` in another terminal with `robot_ip` set to the ESP32 address. For Gazebo, start `gazebo.launch.py` and run the GUI node directly in another sourced terminal:
+
+    ros2 run reception_robot_description rviz_mecanum_teleop.py
+
+Both the GUI and the keyboard teleop publish to the same `/cmd_vel` topic; run only one teleop source at a time so their commands do not compete.
 
 Parameters can be overridden at launch. For example, set measured geometry and port:
 

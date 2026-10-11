@@ -11,7 +11,7 @@ Run these commands from the root of a clone of this repository:
 ```bash
 sudo apt install ros-jazzy-xacro ros-jazzy-robot-state-publisher \
   ros-jazzy-joint-state-publisher-gui ros-jazzy-rviz2 \
-  ros-jazzy-ros-gz ros-jazzy-teleop-twist-keyboard ros-jazzy-urdf
+  ros-jazzy-ros-gz ros-jazzy-teleop-twist-keyboard ros-jazzy-urdf python3-tk
 source /opt/ros/jazzy/setup.bash
 colcon build --symlink-install
 source install/setup.bash
@@ -42,6 +42,16 @@ The control path is `teleop_twist_keyboard -> /cmd_vel -> ROS UDP bridge -> Wi-F
 4. In another terminal, source ROS and the workspace, then run `ros2 run teleop_twist_keyboard teleop_twist_keyboard`. The bridge converts `/cmd_vel` into mecanum wheel speeds and sends them over UDP port 8888. The ESP32 stops the motors if commands stop arriving.
 
 This is open-loop PWM control: the example does not read encoders or provide odometry. It is not ready for autonomous navigation. GPIO mappings, wheel geometry, motor direction, and driver wiring must be checked against the actual robot. Keep the robot supported during first tests.
+
+## Python GUI teleop with RViz
+
+For an RViz view with a Python control window, run:
+
+```bash
+ros2 launch reception_robot_description rviz_teleop.launch.py
+```
+
+The GUI has hold-to-move buttons, WASD translation, Q/E rotation, speed sliders, and a stop button. It publishes `/cmd_vel`. For the real robot, run `hardware.launch.py` in another sourced terminal with the ESP32 IP. For Gazebo, start `gazebo.launch.py` and run `ros2 run reception_robot_description rviz_mecanum_teleop.py` in another terminal; the GUI publishes to the same simulation `/cmd_vel` path.
 
 ## Full instructions
 
