@@ -1,0 +1,6 @@
+# Reference only. This package's Gazebo Harmonic simulation uses the native
+# gz::sim::systems::MecanumDrive model system; it does not load ros2_control.
+# For physical control, add a ros2_control hardware plugin that communicates
+# with firmware on the ESP32 and exposes four velocity command interfaces.
+# Configure the Jazzy mecanum_drive_controller against those interfaces after
+# selecting the controller version and validating its parameter names.
